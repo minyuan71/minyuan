@@ -1,0 +1,92 @@
+import random
+
+# 生成随机数
+def generate_num(max_num, has_decimal):
+    if has_decimal:
+        return round(random.uniform(0, max_num), 2)
+    else:
+        return random.randint(0, max_num)
+
+# 生成四则运算表达式
+def generate_expression(max_num, has_decimal, has_bracket, operators):
+    if has_bracket:
+        bracket_num = random.randint(0, 1)
+    else:
+        bracket_num = 0
+    if bracket_num == 1:
+        bracket_position = random.randint(1, 2)
+    else:
+        bracket_position = 0
+    if bracket_position == 1:
+        left_bracket = '('
+        right_bracket = ')'
+        left_num = generate_num(max_num, has_decimal)
+        operator1 = random.choice(operators)
+        right_num = generate_num(max_num, has_decimal)
+        operator2 = random.choice(operators)
+        num = generate_num(max_num, has_decimal)
+        expression = left_bracket + str(left_num) + ' ' + operator1 + ' ' + str(right_num) + right_bracket + ' ' + operator2 + ' ' + str(num)
+    elif bracket_position == 2:
+        left_bracket = '('
+        right_bracket = ')'
+        num = generate_num(max_num, has_decimal)
+        operator1 = random.choice(operators)
+        left_num = generate_num(max_num, has_decimal)
+        operator2 = random.choice(operators)
+        right_num = generate_num(max_num, has_decimal)
+        expression = str(num) + ' ' + operator1 + ' ' + left_bracket + str(left_num) + ' ' + operator2 + ' ' + str(right_num) + right_bracket
+    else:
+        num1 = generate_num(max_num, has_decimal)
+        operator1 = random.choice(operators)
+        num2 = generate_num(max_num, has_decimal)
+        operator2 = random.choice(operators)
+        num3 = generate_num(max_num, has_decimal)
+        expression = str(num1) + ' ' + operator1 + ' ' + str(num2) + ' ' + operator2 + ' ' + str(num3)
+    return expression
+
+# 生成指定数量的四则运算表达式
+def generate_expressions(num, max_num, has_decimal, has_bracket, operators):
+    expressions = []
+    for i in range(num):
+        expression = generate_expression(max_num, has_decimal, has_bracket, operators)
+        expressions.append(expression)
+    return expressions
+
+# 输出到文件
+def output_to_file(expressions, file_path):
+    with open(file_path, 'w') as f:
+        for i, expression in enumerate(expressions):
+            f.write(str(i+1) + '. ' + expression + ' =\n')
+
+# 打印到控制台
+def output_to_console(expressions):
+    for i, expression in enumerate(expressions):
+        print(str(i+1) + '. ' + expression + ' =')
+
+# 主函数
+def main():
+    num = int(input('请输入题目数量：'))
+    max_num = int(input('请输入最大数：'))
+    has_decimal = input('是否有小数（y/n）：') == 'y'
+    has_bracket = input('是否有括号（y/n）：') == 'y'
+    operators = []
+    if input('是否有加法（y/n）：') == 'y':
+        operators.append('+')
+    if input('是否有减法（y/n）：') == 'y':
+        operators.append('-')
+    if input('是否有乘法（y/n）：') == 'y':
+        operators.append('*')
+    if input('是否有除法（y/n）：') == 'y':
+        operators.append('/')
+    expressions = generate_expressions(num, max_num, has_decimal, has_bracket, operators)
+    output_method = input('请选择输出方式（1.输出到文件 2.打印到控制台）：')
+    if output_method == '1':
+        file_path = input('请输入文件路径：')
+        output_to_file(expressions, file_path)
+    elif output_method == '2':
+        output_to_console(expressions)
+    else:
+        print('输入有误，请重新运行程序。')
+
+if __name__ == '__main__':
+    main()
